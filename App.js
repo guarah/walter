@@ -1,15 +1,54 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList, TextInput, StatusBar, ScrollView } from 'react-native';
-import { Slider, Card } from 'nachos-ui' ;
+import Radium from 'radium';
+import { Text, View, TextInput, StatusBar, ScrollView } from 'react-native';
+import { Card } from 'nachos-ui' ;
+import { API_TMDB_KEY, FIREBASE_CONFIG } from './constants';
 import * as firebase from 'firebase';
+const firebaseApp = firebase.initializeApp(FIREBASE_CONFIG);
 
-import Icon from 'react-native-vector-icons/Ionicons';
-import {
-  RkTheme,
-  RkButton,
-  RkTextInput
-} 
-from 'react-native-ui-kitten';
+const colors = {
+  white: {
+    color: 'white'
+  },
+  black: {
+    color: 'black'
+  }
+};
+
+const styles = {
+  container: {
+    flex: 1,
+    backgroundColor: 'black',
+    justifyContent: 'center',
+    paddingTop: 20,
+  },
+  srachBarContainerStyle: {
+    width: '92%',
+    height: 35,
+    marginLeft: 15,
+    marginTop: 8,
+    marginBottom: 10,
+    padding: 5,
+    borderRadius: 8,
+    backgroundColor: '#3d3d3d',
+    color: 'grey',
+    fontSize: 20,
+    fontStyle: 'italic',
+  },
+  results: {
+    flex: 2
+  },
+  contentContainer: {
+    paddingVertical: 20
+  },
+  headerText: {
+    fontSize: 30,
+    marginTop: 20,
+    marginLeft: 15,
+    fontWeight: 'bold',
+  },
+  colors: colors
+};
 
 export default class App extends React.Component {
   constructor(props) {
@@ -18,8 +57,7 @@ export default class App extends React.Component {
   }
 
   render() {
-
-    var listItems = this.state.results.map(function(item, i) {
+    const listItems = this.state.results.map(function(item, i) {
       return (
         <Card
           key={i}
@@ -29,18 +67,31 @@ export default class App extends React.Component {
       );
     });
 
+    function search(searchText) {
+      const query = searchText.replace('','+');
+      return fetch(`https://api.themoviedb.org/3/search/multi?page=1&api_key=${API_TMDB_KEY}&query=${query}`)
+        .then((response) => response.json())
+        .then((responseJson) => {
+          return responseJson;;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+
     return (
       <View style={styles.container}>
-        <StatusBar
-          backgroundColor="red"
-          // barStyle="light-content"
-        />
 
-        <RkTextInput 
-          label={<Icon name={'ios-search'}/>}
-          placeholder="Search for movies or series..."
-          style={{top: 20, height: 40, backgroundColor: 'white'}}
-          placeholder="Search for movies or series..."
+        <StatusBar barStyle="light-content" />
+
+        <Text style={[styles.colors.white, styles.headerText]}>Search</Text>
+
+        <TextInput
+          placeholder='Series or movies...'
+          placeholderTextColor="grey"
+          style={[
+            styles.srachBarContainerStyle
+          ]}
           onChangeText={(text) => {
             this.setState({text})
           }}
@@ -49,21 +100,12 @@ export default class App extends React.Component {
             search(text.nativeEvent.text).then(x => {
               this.setState({ results: x.results });
             });
-          }}/>
+          }}
+        />
 
         <View style={styles.results}>
-          
           <ScrollView contentContainerStyle={styles.contentContainer}>
-          {listItems}
-          
-          {/* <Card
-            footerContent='The avocado is a tree that is native to Mexico'
-            image='https://upx.cz/BsN'
-          />
-          <Card
-            footerContent='Agaves are a type of succulent plant from Mexico'
-            image='https://upx.cz/BsD'
-          /> */}
+            {listItems}
           </ScrollView>
         </View>
 
@@ -71,42 +113,3 @@ export default class App extends React.Component {
     );
   }
 }
-
-const API_TMDB_KEY = 'b05f7a180e13978b2e69b5ed5df67da1';
-
-function search(searchText) {
-  const query = searchText.replace('','+');
-  return fetch(`https://api.themoviedb.org/3/search/multi?page=1&api_key=${API_TMDB_KEY}&query=${query}`)
-    .then((response) => response.json())
-    .then((responseJson) => {
-      return responseJson;;
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 10,
-  },
-  results: {
-    flex: 2,
-  },
-  contentContainer: {
-    paddingVertical: 20
-  }
-});
-
-// Initialize Firebase
-const firebaseConfig = {
-  apiKey: "<your-api-key>",
-  authDomain: "<your-auth-domain>",
-  databaseURL: "<your-database-url>",
-  storageBucket: "<your-storage-bucket>",
-};
-const firebaseApp = firebase.initializeApp(firebaseConfig);
