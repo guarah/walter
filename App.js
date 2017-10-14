@@ -11,9 +11,6 @@ const firebaseApp = firebase.initializeApp(FIREBASE_CONFIG);
 const styles = {
   container: {
     flex: 1,
-    backgroundColor: '#35343B',
-    justifyContent: 'center',
-    paddingTop: 20
   }
 };
 
