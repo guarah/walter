@@ -6,7 +6,8 @@ import { Text } from 'react-native';
 const styles = {
 };
 
-export class Movie extends React.Component {
+export default class Movie extends React.Component {
+  
   constructor(props) {
     super(props);
   }
