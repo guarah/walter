@@ -5,6 +5,7 @@ import { Icon } from 'react-native-elements';
 import Movie from './../Movie/Movie'
 import Serie from './../Serie/Serie';
 import Other from './../Other/Other';
+import Auth from './../auth/Auth'
 
 // Screens
 const MovieStack = StackNavigator({
@@ -92,4 +93,17 @@ export const AppNavigator = TabNavigator({
       backgroundColor: '#222126'
     }
   },
+});
+
+//login stack
+export const AuthNavigator = StackNavigator({
+  Auth: {
+    screen: Auth
+  },
+  AppNavigator: {
+    screen: AppNavigator
+  }
+},
+{
+  headerMode: 'none'
 });

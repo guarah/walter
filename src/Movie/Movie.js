@@ -1,7 +1,7 @@
 import React from 'react';
 import Radium from 'radium';
 
-import { Text } from 'react-native';
+import { Text, View, StatusBar } from 'react-native';
 
 const styles = {
 };
