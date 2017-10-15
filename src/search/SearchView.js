@@ -1,10 +1,10 @@
 import React from 'react';
 import Radium from 'radium';
 
-import { Text, View, TextInput, ScrollView, Button } from 'react-native';
-import { Icon } from 'react-native-elements'
-import { Card } from 'nachos-ui' ;
+import { View, TextInput, ScrollView, Text, Image } from 'react-native';
+import { Grid, Col } from 'react-native-elements'
 import { TabNavigator, NavigationActions } from "react-navigation";
+import { Card, CardItem, Left, Body, Right, Button, Icon } from 'native-base'
 
 import { API_TMDB_KEY } from '../lib/constants';
 
@@ -34,19 +34,20 @@ const styles = {
   results: {
     flex: 1,
     backgroundColor: '#222126',
+    padding: 10,
     paddingTop: 20
-
   },
-  contentContainer: {
-    padding: 10
-  },
-  cardStyle: {
-    backgroundColor: 'white'
+  listView: {
   },
   headerText: {
     fontSize: 26,
     marginLeft: 15,
     fontWeight: 'bold',
+  },
+  bgCard: {
+    flex: 1,
+    height: 200,
+    width: null  
   },
   colors: colors
 };
@@ -60,16 +61,37 @@ export default class SearchView extends React.Component {
   render() {
     const { navigate, dispatch } = this.props.navigation;
     
-    const listItems = this.state.results.map(function(item, i) {
-      return (
-        <Card
-          style={styles.cardStyle}
-          key={i}
-          footerContent={item.title || item.name}
-          image={'https://image.tmdb.org/t/p/w300/'+item.poster_path}
-        />
+    const listItems = this.state.results
+    .filter(x => x.media_type !== 'person')
+    .map(function(item, i) {
+      const titleLabel = item.media_type === 'movie' ? item.title + ' (Movie)' : item.name + ' (Serie)'
+       return (
+        <Card key={i} style={{borderColor: '#222126', borderRadius: 0}}>
+          <CardItem style={{backgroundColor: '#222126'}}>
+            <Left>
+              <Body>
+                <Text style={{color: 'white'}}>{titleLabel}</Text>
+              </Body>
+            </Left>
+          </CardItem>
+          <CardItem cardBody>
+            <Image source={{uri: 'https://image.tmdb.org/t/p/w300/'+item.poster_path}} style={{height: 200, width: null, flex: 1}}/>
+          </CardItem>
+          <CardItem>
+            <Left>
+              <Text>{item.vote_average}</Text>
+              <Icon name='star' style={{color: '#C43441'}} />
+            </Left>
+            <Right>
+              <Button iconLeft transparent primary>
+                <Icon name='add' style={{color: '#C43441', fontSize: 30}}/>
+              </Button>
+            </Right>
+          </CardItem>
+        </Card>
       );
     });
+    
 
     function search(searchText) {
       const query = searchText.replace('','+');
@@ -113,9 +135,9 @@ export default class SearchView extends React.Component {
 			}}
 		/>
 
-		<ScrollView contentContainerStyle={styles.contentContainer}>
+		<ScrollView contentContainerStyle={styles.listView}>
 
-        {/* search results */}
+        
         {listItems}
 
         <Text style={[styles.colors.white, styles.headerText]}>Suggestion from your list</Text>
