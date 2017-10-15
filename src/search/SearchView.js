@@ -1,9 +1,10 @@
 import React from 'react';
 import Radium from 'radium';
 
-import { Text, View, TextInput, ScrollView } from 'react-native';
+import { Text, View, TextInput, ScrollView, Button } from 'react-native';
+import { Icon } from 'react-native-elements'
 import { Card } from 'nachos-ui' ;
-import { TabNavigator } from "react-navigation";
+import { TabNavigator, NavigationActions } from "react-navigation";
 
 import { API_TMDB_KEY } from '../lib/constants';
 
@@ -31,7 +32,10 @@ const styles = {
     fontStyle: 'italic',
   },
   results: {
-    flex: 1
+    flex: 1,
+    backgroundColor: '#222126',
+    paddingTop: 20
+
   },
   contentContainer: {
     padding: 10
@@ -54,7 +58,8 @@ export default class SearchView extends React.Component {
   }
 
   render() {
-    // search results
+    const { navigate, dispatch } = this.props.navigation;
+    
     const listItems = this.state.results.map(function(item, i) {
       return (
         <Card
@@ -78,11 +83,18 @@ export default class SearchView extends React.Component {
         });
     }
 
+    function back () {
+      const backAction = NavigationActions.back()
+      dispatch(backAction)
+    }
+
     return (
 
 	<View style={styles.results}>
-		<ScrollView contentContainerStyle={styles.contentContainer}>
-		<Text style={[styles.colors.white, styles.headerText]}>Search</Text>
+    <View style={{flexWrap: 'wrap', alignItems: 'flex-start', flexDirection:'row'}}>
+      <Text style={[styles.colors.white, styles.headerText, {flex: 2}]}>Search</Text>
+      <Icon style={{marginTop: 5, marginRight: 5}} name='close' color='#C43441' onPress={ () => { back() }} />
+    </View>
 
 		<TextInput
 			placeholder='Series or movies...'
@@ -100,6 +112,8 @@ export default class SearchView extends React.Component {
 			});
 			}}
 		/>
+
+		<ScrollView contentContainerStyle={styles.contentContainer}>
 
         {/* search results */}
         {listItems}

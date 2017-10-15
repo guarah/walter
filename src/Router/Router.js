@@ -1,13 +1,15 @@
-import React from 'react';
-import { TabNavigator, StackNavigator } from "react-navigation";
-import { Icon } from 'react-native-elements';
+import React from 'react'
+import { Button } from 'react-native'
+import { TabNavigator, StackNavigator } from "react-navigation"
+import { Icon } from 'react-native-elements'
 
 import Movie from './../Movie/Movie'
-import Serie from './../Serie/Serie';
-import Other from './../Other/Other';
+import Serie from './../Serie/Serie'
+import Other from './../Other/Other'
 import Auth from './../auth/Auth'
+import SearchView from './../search/SearchView'
 
-// Screens
+
 const MovieStack = StackNavigator({
   Movies: {
     screen: Movie,
@@ -22,7 +24,7 @@ const MovieStack = StackNavigator({
       },
       headerTintColor: {
         backgroundColor: '#222126'
-      },
+      }
     }
   }
 });
@@ -64,8 +66,8 @@ const OtherStack = StackNavigator({
     }
   }
 });
-  
-export const AppNavigator = TabNavigator({
+
+export const TabsNavigator = TabNavigator({
   Movies: {
     screen: MovieStack,
     navigationOptions: {
@@ -94,8 +96,23 @@ export const AppNavigator = TabNavigator({
     }
   },
 });
+  
+export const AppNavigator = StackNavigator({
+  TabsNavigator: {
+    screen: TabsNavigator,
+    navigationOptions: {
+      gesturesEnabled: false,
+    }
+  },
+  Search: {
+    screen: SearchView
+  }
+},
+{
+  mode: 'modal',
+  headerMode: 'none'
+})
 
-//login stack
 export const AuthNavigator = StackNavigator({
   Auth: {
     screen: Auth
