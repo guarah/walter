@@ -2,7 +2,6 @@ import React from 'react';
 import Radium from 'radium';
 
 import { View, TextInput, ScrollView, Text, Image } from 'react-native';
-import { Grid, Col } from 'react-native-elements'
 import { TabNavigator, NavigationActions } from "react-navigation";
 import { Card, CardItem, Left, Body, Right, Button, Icon } from 'native-base'
 
@@ -67,14 +66,14 @@ export default class SearchView extends React.Component {
       const titleLabel = item.media_type === 'movie' ? item.title + ' (Movie)' : item.name + ' (Serie)'
        return (
         <Card key={i} style={{borderColor: '#222126', borderRadius: 0}}>
-          <CardItem style={{backgroundColor: '#222126'}}>
+          <CardItem button onPress={() => goToMedia(item)} style={{backgroundColor: '#222126'}}>
             <Left>
               <Body>
                 <Text style={{color: 'white'}}>{titleLabel}</Text>
               </Body>
             </Left>
           </CardItem>
-          <CardItem cardBody>
+          <CardItem cardBody button onPress={() => goToMedia(item)}>
             <Image source={{uri: 'https://image.tmdb.org/t/p/w300/'+item.poster_path}} style={{height: 200, width: null, flex: 1}}/>
           </CardItem>
           <CardItem>
@@ -105,9 +104,13 @@ export default class SearchView extends React.Component {
         });
     }
 
-    function back () {
+    function back() {
       const backAction = NavigationActions.back()
       dispatch(backAction)
+    }
+
+    function goToMedia(media) {
+      navigate('MovieSpace', { media })
     }
 
     return (
@@ -115,7 +118,9 @@ export default class SearchView extends React.Component {
 	<View style={styles.results}>
     <View style={{flexWrap: 'wrap', alignItems: 'flex-start', flexDirection:'row'}}>
       <Text style={[styles.colors.white, styles.headerText, {flex: 2}]}>Search</Text>
-      <Icon style={{marginTop: 5, marginRight: 5}} name='close' color='#C43441' onPress={ () => { back() }} />
+      <Button iconLeft transparent primary onPress={ () => { back() }}>
+        <Icon name='close' style={{color: '#C43441', fontSize: 30, marginRight: 5}}/>
+      </Button>
     </View>
 
 		<TextInput

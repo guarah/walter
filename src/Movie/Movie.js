@@ -1,10 +1,8 @@
 import React from 'react'
 import Radium from 'radium'
 
-import { Text, View, StatusBar, TouchableOpacity, Button } from 'react-native'
-import { Icon } from 'react-native-elements'
-
-import Serie from './../Serie/Serie'
+import { Text, View, StatusBar } from 'react-native'
+import { Button, Icon } from 'native-base'
 
 const styles = {
 };
@@ -14,7 +12,9 @@ export default class Movie extends React.Component {
     const {state, setParams, navigate} = navigation;
     return {
       headerRight: (
-        <Icon name='add' color='#C43441' onPress={() => navigate('Search')} />
+        <Button iconLeft transparent primary onPress={() => navigate('Search')}>
+          <Icon name='add' style={{color: '#C43441', fontSize: 30, marginRight: 10 }}/>
+        </Button>
       )
     };
   };

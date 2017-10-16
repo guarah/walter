@@ -4,6 +4,7 @@ import { TabNavigator, StackNavigator } from "react-navigation"
 import { Icon } from 'react-native-elements'
 
 import Movie from './../Movie/Movie'
+import MovieSpace from './../Movie/MovieSpace'
 import Serie from './../Serie/Serie'
 import Other from './../Other/Other'
 import Auth from './../auth/Auth'
@@ -22,9 +23,7 @@ const MovieStack = StackNavigator({
       headerStyle: {
          backgroundColor: '#222126'
       },
-      headerTintColor: {
-        backgroundColor: '#222126'
-      }
+      headerTintColor: '#C43441'
     }
   }
 });
@@ -60,9 +59,7 @@ const OtherStack = StackNavigator({
       headerStyle: {
          backgroundColor: '#222126'
       },
-      headerTintColor: {
-        backgroundColor: '#222126'
-      },
+      headerTintColor: '#C43441'
     }
   }
 });
@@ -96,6 +93,30 @@ export const TabsNavigator = TabNavigator({
     }
   },
 });
+
+export const SearchStack = StackNavigator({
+  Search: {
+    screen: SearchView,
+    navigationOptions: {
+      header: null
+    }
+  },
+  MovieSpace: {
+    screen: MovieSpace,
+    navigationOptions: {
+      headerTitleStyle: {
+         color: 'white'
+      },
+      headerStyle: {
+         backgroundColor: '#222126'
+      },
+      headerTintColor: '#C43441'
+    }
+  }
+},
+{
+  headerMode: 'screen'
+})
   
 export const AppNavigator = StackNavigator({
   TabsNavigator: {
@@ -105,7 +126,7 @@ export const AppNavigator = StackNavigator({
     }
   },
   Search: {
-    screen: SearchView
+    screen: SearchStack
   }
 },
 {
