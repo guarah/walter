@@ -8,7 +8,8 @@ const firebaseApp = firebase.initializeApp(FIREBASE_CONFIG)
 const styles = {
   container: {
     flex: 1,
-    backgroundColor: '#222126'
+    backgroundColor: '#222126',
+    paddingTop: 20
   }
 }
 
@@ -26,7 +27,7 @@ export default class Auth extends React.Component {
         <Button
           onPress={() => navigate('AppNavigator')}
           title="Home"
-          color="#841584"
+          color="white"
           accessibilityLabel="Home"
         />
 

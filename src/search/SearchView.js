@@ -1,9 +1,9 @@
 import React from 'react';
 import Radium from 'radium';
 
-import { Text, View, TextInput, ScrollView } from 'react-native';
-import { Card } from 'nachos-ui' ;
-import { TabNavigator } from "react-navigation";
+import { View, TextInput, ScrollView, Text, Image } from 'react-native';
+import { TabNavigator, NavigationActions } from "react-navigation";
+import { Card, CardItem, Left, Body, Right, Button, Icon } from 'native-base'
 
 import { API_TMDB_KEY } from '../lib/constants';
 
@@ -31,18 +31,22 @@ const styles = {
     fontStyle: 'italic',
   },
   results: {
-    flex: 1
+    flex: 1,
+    backgroundColor: '#222126',
+    padding: 10,
+    paddingTop: 20
   },
-  contentContainer: {
-    padding: 10
-  },
-  cardStyle: {
-    backgroundColor: 'white'
+  listView: {
   },
   headerText: {
     fontSize: 26,
     marginLeft: 15,
     fontWeight: 'bold',
+  },
+  bgCard: {
+    flex: 1,
+    height: 200,
+    width: null  
   },
   colors: colors
 };
@@ -54,17 +58,39 @@ export default class SearchView extends React.Component {
   }
 
   render() {
-    // search results
-    const listItems = this.state.results.map(function(item, i) {
-      return (
-        <Card
-          style={styles.cardStyle}
-          key={i}
-          footerContent={item.title || item.name}
-          image={'https://image.tmdb.org/t/p/w300/'+item.poster_path}
-        />
+    const { navigate, dispatch } = this.props.navigation;
+    
+    const listItems = this.state.results
+    .filter(x => x.media_type !== 'person')
+    .map(function(item, i) {
+      const titleLabel = item.media_type === 'movie' ? item.title + ' (Movie)' : item.name + ' (Serie)'
+       return (
+        <Card key={i} style={{borderColor: '#222126', borderRadius: 0}}>
+          <CardItem button onPress={() => goToMedia(item)} style={{backgroundColor: '#222126'}}>
+            <Left>
+              <Body>
+                <Text style={{color: 'white'}}>{titleLabel}</Text>
+              </Body>
+            </Left>
+          </CardItem>
+          <CardItem cardBody button onPress={() => goToMedia(item)}>
+            <Image source={{uri: 'https://image.tmdb.org/t/p/w300/'+item.poster_path}} style={{height: 200, width: null, flex: 1}}/>
+          </CardItem>
+          <CardItem>
+            <Left>
+              <Text>{item.vote_average}</Text>
+              <Icon name='star' style={{color: '#C43441'}} />
+            </Left>
+            <Right>
+              <Button iconLeft transparent primary>
+                <Icon name='add' style={{color: '#C43441', fontSize: 30}}/>
+              </Button>
+            </Right>
+          </CardItem>
+        </Card>
       );
     });
+    
 
     function search(searchText) {
       const query = searchText.replace('','+');
@@ -78,11 +104,24 @@ export default class SearchView extends React.Component {
         });
     }
 
+    function back() {
+      const backAction = NavigationActions.back()
+      dispatch(backAction)
+    }
+
+    function goToMedia(media) {
+      navigate('MovieSpace', { media })
+    }
+
     return (
 
 	<View style={styles.results}>
-		<ScrollView contentContainerStyle={styles.contentContainer}>
-		<Text style={[styles.colors.white, styles.headerText]}>Search</Text>
+    <View style={{flexWrap: 'wrap', alignItems: 'flex-start', flexDirection:'row'}}>
+      <Text style={[styles.colors.white, styles.headerText, {flex: 2}]}>Search</Text>
+      <Button iconLeft transparent primary onPress={ () => { back() }}>
+        <Icon name='close' style={{color: '#C43441', fontSize: 30, marginRight: 5}}/>
+      </Button>
+    </View>
 
 		<TextInput
 			placeholder='Series or movies...'
@@ -101,7 +140,9 @@ export default class SearchView extends React.Component {
 			}}
 		/>
 
-        {/* search results */}
+		<ScrollView contentContainerStyle={styles.listView}>
+
+        
         {listItems}
 
         <Text style={[styles.colors.white, styles.headerText]}>Suggestion from your list</Text>

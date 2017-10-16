@@ -1,13 +1,16 @@
-import React from 'react';
-import { TabNavigator, StackNavigator } from "react-navigation";
-import { Icon } from 'react-native-elements';
+import React from 'react'
+import { Button } from 'react-native'
+import { TabNavigator, StackNavigator } from "react-navigation"
+import { Icon } from 'react-native-elements'
 
 import Movie from './../Movie/Movie'
-import Serie from './../Serie/Serie';
-import Other from './../Other/Other';
+import MovieSpace from './../Movie/MovieSpace'
+import Serie from './../Serie/Serie'
+import Other from './../Other/Other'
 import Auth from './../auth/Auth'
+import SearchView from './../search/SearchView'
 
-// Screens
+
 const MovieStack = StackNavigator({
   Movies: {
     screen: Movie,
@@ -20,9 +23,7 @@ const MovieStack = StackNavigator({
       headerStyle: {
          backgroundColor: '#222126'
       },
-      headerTintColor: {
-        backgroundColor: '#222126'
-      },
+      headerTintColor: '#C43441'
     }
   }
 });
@@ -58,14 +59,12 @@ const OtherStack = StackNavigator({
       headerStyle: {
          backgroundColor: '#222126'
       },
-      headerTintColor: {
-        backgroundColor: '#222126'
-      },
+      headerTintColor: '#C43441'
     }
   }
 });
-  
-export const AppNavigator = TabNavigator({
+
+export const TabsNavigator = TabNavigator({
   Movies: {
     screen: MovieStack,
     navigationOptions: {
@@ -95,7 +94,46 @@ export const AppNavigator = TabNavigator({
   },
 });
 
-//login stack
+export const SearchStack = StackNavigator({
+  Search: {
+    screen: SearchView,
+    navigationOptions: {
+      header: null
+    }
+  },
+  MovieSpace: {
+    screen: MovieSpace,
+    navigationOptions: {
+      headerTitleStyle: {
+         color: 'white'
+      },
+      headerStyle: {
+         backgroundColor: '#222126'
+      },
+      headerTintColor: '#C43441'
+    }
+  }
+},
+{
+  headerMode: 'screen'
+})
+  
+export const AppNavigator = StackNavigator({
+  TabsNavigator: {
+    screen: TabsNavigator,
+    navigationOptions: {
+      gesturesEnabled: false,
+    }
+  },
+  Search: {
+    screen: SearchStack
+  }
+},
+{
+  mode: 'modal',
+  headerMode: 'none'
+})
+
 export const AuthNavigator = StackNavigator({
   Auth: {
     screen: Auth
